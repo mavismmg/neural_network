@@ -1,4 +1,6 @@
 import math
+#import numpy as np
+import matplotlib.pyplot as plt
 
 """ Pegamos o valor de prediction e subtraímos de target, função resulta no erro
 de prediction """
@@ -13,35 +15,32 @@ def mean_square_error(prediction, target, mse_n):
 
     return mse
 
-def euler(n):
+""" Tentar implementar euler para float """
+""" def euler(n):
     term_sum = 0
     for i in range(n):
         term = 1 / math.factorial(i)
         term_sum = term_sum + term
 
-    return term_sum
+    return term_sum """
 
-def sigmoid(a):
-    """ Ainda não sei se será util, mas estou tentando achar uma forma melhor para arrendondar
-        os valores utilizados """
-    # Estamos arredondando a, então estamos acrescentando um erro ao cálculo.
-    b = 0
+""" def round_number(a):
     int_a = int(a)
-    temp = 0
-    #print('Valor de similaridade: ', a,'Valor transformando a var em int: ', int_a)
-    e_error = a - int_a
+    error = a - int_a
     if (a - int_a >= 0.5):
-        b = a + (1 - e_error)
+        b = a + (1 - error)
         int_b = int(b)
         print(b)
-        method_error = 1 - e_error
-        print('Erro calculado: ', e_error, method_error)
-        return 1 / (1 + euler(-int_b))
-    else: 
-        return 1 / (1 + euler(-int_a))
-    print('Erro calculado: ', e_error, method_error)
+        ver_error = 1 - error
+        print(ver_error)
 
-    # return 1 / (1 + euler(-int_b))
+        return int_b
+    else:
+        return int_a """
+
+def sigmoid(a):
+
+    return 1 / (1 + math.exp(-a))
 
 """ Usando o produto escalar, podemos verificar a similaridade entre a entrada (input) ...
 e a entrada anterior (weights);
@@ -61,32 +60,61 @@ def dot_product(input, weights):
         dot_sum = 0
     return similarity
 
-def make_prediction(input, weights, bias):
+def make_prediction(input, weights, bias, similarity):
     layer_1 = dot_product(input, weights) + bias
-    for i in range(len(layer_1) - 1):
+    for i in range(len(similarity) - 1):
         # Pegando o maior valor weights calculado:
-        if (layer_1[i] > layer_1[i+1]):
+        if (similarity[i] > similarity[i+1]):
             value = layer_1[i]
         else:
             value = layer_1[i+1]
+    print(layer_1)
     layer_2 = sigmoid(value)
+    print(layer_2)
 
     return layer_2
 
-""" input_vector = [0.2, 1.3]
-weights = [[0.2, 1.5], [1.2, 3.5]] """
-input_vector = [5.23, 2.54, 8.99, 3.22, 9.99, 10.54]
+input_vector = [2, 1.5]
+weights = [[1.45, -0.66], [0.0, 0.0]]
+""" input_vector = [5.23, 2.54, 8.99, 3.22, 9.99, 10.54]
 weights = [[1.12, 3.44, 3.14, 6.32, 8.45, 7.54], 
-            [8.45, 3.57, 2.22, 7.45, 6.22, 7.77]]
+            [8.45, 3.57, 2.22, 7.45, 6.22, 7.77]] """
 bias = [0.0]
 
+print(weights)
 similarity = dot_product(input_vector, weights)
-prediction = make_prediction(input_vector, weights, bias)
+prediction = make_prediction(input_vector, weights, bias, similarity)
 
-target = 0.5
+target = 0
 mse_n = len(input_vector)
 mse = mean_square_error(prediction, target, mse_n)
+#mse = np.square(prediction - target)
+
+derivative = 2 * (prediction - target)
+derivative_vector = []
+weights_1 = [[0] * (len(weights))] * (len(input_vector))
+
+for i in range(len(weights) - 1):  
+    for j in range(len(input_vector)):
+        derivative_vector.append(derivative)
+        print(derivative_vector)
+        #weights_1.append(weights[i][j] - derivative_vector[j])
+        weights_1 = [[weights_1[i][j] - derivative_vector[j]] * len(weights)] * len(input_vector)
+
+#print(weights_1)
+similarity_1 = dot_product(input_vector, weights_1)
+prediction_1 = make_prediction(input_vector, weights_1, bias, similarity_1)
+#mse_1 = np.square(prediction_1 - target)
+error = (prediction - target) ** 2
 
 print('Similaridades: ', similarity)
 print('Prediction: ', prediction)
 print('Mean squared error: ', mse)
+print('Derivative: ', derivative)
+
+#print('Prediction_1:', prediction_1)
+#print('Mse 1:', mse_1)
+
+#plt.scatter(prediction, mse)
+plt.scatter(prediction, mse)
+plt.show()
