@@ -1,6 +1,29 @@
 import math
-#import numpy as np
+import numpy as np
 import matplotlib.pyplot as plt
+
+def define_weights_for_derivative(weights):
+    weights_1 = [[0] * (len(weights))] * (len(input_vector))
+    var_aux = 0
+    var_aux = weights
+    weights_1 = var_aux
+
+    return weights_1
+
+def derivative_vector(input, derivative):
+    vector_derivative = []
+    for i in range(len(input)):
+        vector_derivative.append(derivative)
+
+    return vector_derivative
+
+def derivative_weights(weights_1, vector_derivative):
+    new_weights = []
+    for i in range(len(weights_1) - 1):
+        for j in range(len(vector_derivative)):
+            new_weights.append(weights_1[i][j] - vector_derivative[j])
+    
+    return new_weights
 
 """ Pegamos o valor de prediction e subtraímos de target, função resulta no erro
 de prediction """
@@ -68,9 +91,8 @@ def make_prediction(input, weights, bias, similarity):
             value = layer_1[i]
         else:
             value = layer_1[i+1]
-    print(layer_1)
+
     layer_2 = sigmoid(value)
-    print(layer_2)
 
     return layer_2
 
@@ -81,7 +103,6 @@ weights = [[1.12, 3.44, 3.14, 6.32, 8.45, 7.54],
             [8.45, 3.57, 2.22, 7.45, 6.22, 7.77]] """
 bias = [0.0]
 
-print(weights)
 similarity = dot_product(input_vector, weights)
 prediction = make_prediction(input_vector, weights, bias, similarity)
 
@@ -91,20 +112,33 @@ mse = mean_square_error(prediction, target, mse_n)
 #mse = np.square(prediction - target)
 
 derivative = 2 * (prediction - target)
-derivative_vector = []
-weights_1 = [[0] * (len(weights))] * (len(input_vector))
+weights_1 = define_weights_for_derivative(weights)
+vector_derivative = derivative_vector(input_vector, derivative)
+weights_d = derivative_weights(weights_1, vector_derivative)
 
-for i in range(len(weights) - 1):  
+""" derivative_vector = []
+weights_1 = [[0] * (len(weights))] * (len(input_vector))
+var_aux = 0
+print(weights_1)
+for i in range(len(weights)):
+    for j in range(len(input_vector)):
+        derivative_vector.append(derivative)
+        var_aux = weights
+        #var_aux = [[weights_1[i][j] - derivative_vector[j]] * (len(weights))] * len(input_vector)
+        weights_1 = var_aux
+        #weights_1 = weights_1[i][j] - derivative_vector[j]
+        print(weights_1) """
+
+""" for i in range(len(weights) - 1):  
     for j in range(len(input_vector)):
         derivative_vector.append(derivative)
         print(derivative_vector)
         #weights_1.append(weights[i][j] - derivative_vector[j])
-        weights_1 = [[weights_1[i][j] - derivative_vector[j]] * len(weights)] * len(input_vector)
+        weights_1 = [[weights_1[i][j] - derivative_vector[j]] * len(weights)] * len(input_vector) """
 
-#print(weights_1)
-similarity_1 = dot_product(input_vector, weights_1)
-prediction_1 = make_prediction(input_vector, weights_1, bias, similarity_1)
-#mse_1 = np.square(prediction_1 - target)
+similarity_1 = dot_product(input_vector, weights_d)
+prediction_1 = make_prediction(input_vector, weights_d, bias, similarity_1)
+mse_1 = np.square(prediction_1 - target)
 error = (prediction - target) ** 2
 
 print('Similaridades: ', similarity)
@@ -112,8 +146,8 @@ print('Prediction: ', prediction)
 print('Mean squared error: ', mse)
 print('Derivative: ', derivative)
 
-#print('Prediction_1:', prediction_1)
-#print('Mse 1:', mse_1)
+print('Prediction_1:', prediction_1)
+print('Mse 1:', mse_1)
 
 #plt.scatter(prediction, mse)
 plt.scatter(prediction, mse)
