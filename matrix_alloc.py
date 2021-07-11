@@ -11,18 +11,19 @@ class DynamicMatrix(object):
             
         return self.line, self.column
 
-    def __getitem__(self, i):
+    def __getitem__(self, i, j):
+        print(self.line)
         if not 0 <= i < self.line:
 
             return IndexError('i is out of bounds')
 
-        # if not 0 <= j < self.column:
+        if not 0 <= j < self.column:
             
-        #     return IndexError('j is out of bounds')
+            return IndexError('j is out of bounds')
 
-        return self.matrix[i]
+        return self.matrix[i][j]
 
-    def append(self, element):
+    def append(self, element_l, element_c):
         # if self.line == self.capacity:
         #     self._resize(2 * self.capacity)
 
@@ -36,10 +37,10 @@ class DynamicMatrix(object):
                     self._resize(2 * self.capacity)
 
         for i in range(self.line):
-            self.matrix[self.line] = element
+            self.matrix[self.line] = element_l
             self.line += 1
             for j in range(self.column):
-                self.matrix[self.column] = element
+                self.matrix[self.column] = element_c
                 self.column += 1
 
         # self.matrix[self.line] = element
