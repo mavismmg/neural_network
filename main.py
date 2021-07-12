@@ -1,7 +1,5 @@
-import matplotlib.pyplot as plt
-import neural_network as Neural
-import matrix_alloc as alloc
 from all_math import _math as solve
+from neural import neural_network as neural
 
 def main():
     input_vector = [2, 1.5]
@@ -12,19 +10,19 @@ def main():
     bias = [0.0]
 
     similarity = solve.Math.dot_product(input_vector, weights)
-    prediction = Neural.NeuralNetwork.make_prediction(input_vector, weights, bias, similarity)
+    prediction = neural.NeuralNetwork.make_prediction(input_vector, weights, bias, similarity)
 
     target = 0
     mse_n = len(input_vector)
     mse = solve.Math.mean_square_error(prediction, target, mse_n)
 
     derivative = 2 * (prediction - target)
-    weights_1 = Neural.NeuralNetwork.define_weights_for_derivative(weights, input_vector)
+    weights_1 = neural.NeuralNetwork.define_weights_for_derivative(weights, input_vector)
     vector_derivative = solve.Math.derivative_vector(input_vector, derivative)
     weights_d = solve.Math.derivative_weights(weights_1, vector_derivative)
 
     similarity_1 = solve.Math.dot_product_test(input_vector, weights_d)
-    prediction_1 = Neural.NeuralNetwork.make_prediction_test(input_vector, weights_d, bias, similarity_1)
+    prediction_1 = neural.NeuralNetwork.make_prediction_test(input_vector, weights_d, bias, similarity_1)
     mse_1 = solve.Math.mean_square_error(prediction_1, target, mse_n)
     error = (prediction - target) ** 2
 
@@ -32,7 +30,6 @@ def main():
     print('Prediction: ', prediction)
     print('Mean squared error: ', mse)
     print('Derivative: ', derivative)
-
     print('Prediction_1:', prediction_1)
     print('Mse 1:', mse_1)
 
@@ -41,6 +38,17 @@ def main():
     dprediction_dlayer1 = solve.Math.derivative_sigmoid(layer_1)
     dlayer1_dbias1 = 1
     derror_dbias = derror_dprediction * dprediction_dlayer1 * dlayer1_dbias1
+
+    print(derror_dprediction)
+    print(dprediction_dlayer1)
+    print(dlayer1_dbias1)
+    print(derror_dbias)
+
+    """     learning_rate = 0.1
+
+    neural_network = NeuralNetwork(learning_rate)
+
+    neural_network.predict(input_vector) """
 
 
 if __name__ == "__main__":

@@ -9,13 +9,13 @@ class Math:
         self.vector_derivative = []
         self.n_weights = []
 
-    def sigmoid(self, a):
+    def sigmoid(a):
 
         return 1 / (1 + math.exp(-a))
 
-    def mean_square_error(self, prediction, target, mse_n):
+    def mean_square_error(prediction, target, mse_n):
         sum = 0
-        for i in range(0, mse_n):
+        for current_iter in range(0, mse_n):
             diff = prediction - target
             sqre = diff ** 2
             sum = sqre + sum
@@ -29,45 +29,51 @@ class Math:
         Se o produto de weights(2) * input > weights(1) * input, então weights(2) é mais similar ao input;
         Consequentemente as saídas também são mais similares, a partir disso temos uma predição; 
     """
-    def dot_product(self, input, weights):
+    def dot_product(input, weights):
         dot_sum = 0
-        for i in range(len(weights)):
-            for j in range(len(input)):
-                self.dot_product_vector = input[j] * weights[i][j]
-                cur_index = self.dot_product_vector
+        dot_product_vector = []
+        similarity = []
+        for line in range(len(weights)):
+            for columm in range(len(input)):
+                dot_product_vector = input[columm] * weights[line][columm]
+                cur_index = dot_product_vector
                 dot_sum = cur_index + dot_sum
 
-            self.similarity.append(dot_sum)
+            similarity.append(dot_sum)
             dot_sum = 0
 
-        return self.similarity
+        return similarity
 
-    def dot_product_test(self, input, weights):
+    def dot_product_test(input, weights):
         dot_sum = 0
-        for i in range(len(input)):
-            self.dot_product_vector = input[i] * weights[i]
-            cur_index = self.dot_product_vector
+        dot_product_vector = []
+        similarity = []
+        for line in range(len(input)):
+            dot_product_vector = input[line] * weights[line]
+            cur_index = dot_product_vector
             dot_sum = cur_index + dot_sum
         
-        self.similarity.append(dot_sum)
+        similarity.append(dot_sum)
         dot_sum = 0
 
-        return self.similarity
+        return similarity
 
-    def derivative_vector(self, input, derivative):
-        for i in range(len(input)):
-            self.vector_derivative.append(derivative)
+    def derivative_vector(input, derivative):
+        vector_derivative = []
+        for current_iter in range(len(input)):
+            vector_derivative.append(derivative)
 
-        return self.vector_derivative
+        return vector_derivative
 
-    def derivative_weights(self, weights_1):
-        for i in range(len(weights_1) - 1):
-            for j in range(len(self.vector_derivative)):
-                self.n_weights.append(weights_1[i][j] - self.vector_derivative[j])
+    def derivative_weights(weights_1, vector_derivative):
+        n_weights = []
+        for line in range(len(weights_1) - 1):
+            for columm in range(len(vector_derivative)):
+                n_weights.append(weights_1[line][columm] - vector_derivative[columm])
         
-        return self.n_weights
+        return n_weights
 
-    def derivative_sigmoid(self, a):
+    def derivative_sigmoid(a):
         converted_a = a[0]
 
         return Math.sigmoid(converted_a) * (1 - Math.sigmoid(converted_a))
